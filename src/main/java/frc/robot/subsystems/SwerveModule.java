@@ -1,14 +1,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -113,7 +110,7 @@ public class SwerveModule {
     swerveModulePosition.angle = Rotation2d.fromRotations(steerPosition);
     swerveModulePosition.distanceMeters =
         drivePosition
-            / (MotorGlobalValues.DRIVE_MOTOR_GEAR_RATIO / MotorGlobalValues.MetersPerRevolution);
+            / (MotorGlobalValues.DRIVE_MOTOR_GEAR_RATIO / MotorGlobalValues.METERS_PER_REVOLUTION);
 
     return swerveModulePosition;
   }
@@ -141,7 +138,7 @@ public class SwerveModule {
 
     double velocityToSet =
         optimized.speedMetersPerSecond
-            * (MotorGlobalValues.DRIVE_MOTOR_GEAR_RATIO / MotorGlobalValues.MetersPerRevolution);
+            * (MotorGlobalValues.DRIVE_MOTOR_GEAR_RATIO / MotorGlobalValues.METERS_PER_REVOLUTION);
     driveMotor.setControl(velocitySetter.withVelocity(velocityToSet));
 
     this.state = state;
@@ -156,7 +153,7 @@ public class SwerveModule {
     state.angle = Rotation2d.fromRotations(steerMotor.getPosition().getValueAsDouble());
     state.speedMetersPerSecond =
         driveMotor.getVelocity().getValueAsDouble()
-            * (MotorGlobalValues.DRIVE_MOTOR_GEAR_RATIO / MotorGlobalValues.MetersPerRevolution);
+            * (MotorGlobalValues.DRIVE_MOTOR_GEAR_RATIO / MotorGlobalValues.METERS_PER_REVOLUTION);
     return state;
   }
 }

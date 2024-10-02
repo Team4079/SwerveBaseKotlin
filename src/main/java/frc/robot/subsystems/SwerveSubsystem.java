@@ -58,22 +58,22 @@ public class SwerveSubsystem extends SubsystemBase {
             MotorGlobalValues.FRONT_LEFT_DRIVE_ID,
             MotorGlobalValues.FRONT_LEFT_STEER_ID,
             MotorGlobalValues.FRONT_LEFT_CAN_CODER_ID,
-            SwerveGlobalValues.CANCoderValue9),
+            SwerveGlobalValues.CANCODER_VALUE9),
         new SwerveModule(
             MotorGlobalValues.FRONT_RIGHT_DRIVE_ID,
             MotorGlobalValues.FRONT_RIGHT_STEER_ID,
             MotorGlobalValues.FRONT_RIGHT_CAN_CODER_ID,
-            SwerveGlobalValues.CANCoderValue10),
+            SwerveGlobalValues.CANCODER_VALUE10),
         new SwerveModule(
             MotorGlobalValues.BACK_LEFT_DRIVE_ID,
             MotorGlobalValues.BACK_LEFT_STEER_ID,
             MotorGlobalValues.BACK_LEFT_CAN_CODER_ID,
-            SwerveGlobalValues.CANCoderValue11),
+            SwerveGlobalValues.CANCODER_VALUE11),
         new SwerveModule(
             MotorGlobalValues.BACK_RIGHT_DRIVE_ID,
             MotorGlobalValues.BACK_RIGHT_STEER_ID,
             MotorGlobalValues.BACK_RIGHT_CAN_CODER_ID,
-            SwerveGlobalValues.CANCoderValue12)
+            SwerveGlobalValues.CANCODER_VALUE12)
     };
 
     field = new Field2d();

@@ -15,16 +15,19 @@ import org.photonvision.PhotonCamera
 import org.photonvision.PhotonPoseEstimator
 import org.photonvision.PhotonPoseEstimator.PoseStrategy
 import org.photonvision.PhotonUtils
+import org.photonvision.targeting.PhotonPipelineResult
 import org.photonvision.targeting.PhotonTrackedTarget
 
-/** The PhotonVision subsystem handles vision processing using PhotonVision cameras. */
+/**
+ * The PhotonVision subsystem handles vision processing using PhotonVision cameras.
+ */
 class Photonvision : SubsystemBase() {
   // PhotonVision cameras
   var camera1: PhotonCamera = PhotonCamera("Camera One")
   var camera2: PhotonCamera = PhotonCamera("Camera Two")
 
   // Tracked targets from the cameras
-  var target1: PhotonTrackedTarget? = null
+  var target1: PhotonTrackedTarget? = null // TODO: Use this and the below to track targets
   var target2: PhotonTrackedTarget? = null
 
   // Pose estimator for determining the robot's position on the field
@@ -41,18 +44,25 @@ class Photonvision : SubsystemBase() {
       Rotation3d(0.0, 0.0, 0.0),
     ) // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
 
+  // Variables to store target visibility and pose information for camera 1
   var targetVisible1: Boolean = false
   var targetYaw1: Double = 0.0
   var targetPoseAmbiguity1: Double = 0.0
   var range1: Double = 0.0
+
+  // Variables to store target visibility and pose information for camera 2
   var targetVisible2: Boolean = false
   var targetYaw2: Double = 0.0
   var targetPoseAmbiguity2: Double = 0.0
   var range2: Double = 0.0
+
+  // Variables to store the selected target's yaw and range
   var targetYaw: Double = 0.0
   var rangeToTarget: Double = 0.0
 
-  /** Constructs a new PhotonVision subsystem. */
+  /**
+   * Constructs a new PhotonVision subsystem.
+   */
   init {
     photonPoseEstimator =
       PhotonPoseEstimator(
@@ -71,60 +81,8 @@ class Photonvision : SubsystemBase() {
     val result1 = camera1.getLatestResult()
     val result2 = camera2.getLatestResult()
 
-    if (result1.hasTargets()) {
-      // Camera processed a new frame since last
-      // Get the last one in the list.
-
-      for (tag in result1.getTargets()) {
-        // IMPORTANT: CHANGE DA TAGRGET ID FOR STUFF AND THIGNS LOLOLOLOL
-        if (tag.fiducialId == 7) {
-          // Found Tag 7, record its information
-
-          targetPoseAmbiguity1 = tag.poseAmbiguity
-          targetYaw1 = tag.yaw
-          targetVisible1 = true
-
-          range1 =
-            PhotonUtils.calculateDistanceToTargetMeters(
-              GlobalsValues.PhotonVisionConstants.CAMERA_ONE_HEIGHT,
-              1.435, // From 2024 game manual for ID 7 | IMPORTANT TO CHANGE
-              GlobalsValues.PhotonVisionConstants
-                .CAMERA_ONE_ANGLE, // Rotation about Y = Pitch | UP IS POSITIVE
-              Units.degreesToRadians(tag.pitch),
-            )
-        }
-      }
-    } else {
-      targetVisible1 = false
-      targetPoseAmbiguity1 = 1e9
-    }
-    if (result2.hasTargets()) {
-      // Camera processed a new frame since last
-      // Get the last one in the list.
-
-      for (tag in result2.getTargets()) {
-        // IMPORTANT: CHANGE DA TAGRGET ID FOR STUFF AND THIGNS LOLOLOLOL
-        if (tag.fiducialId == 7) {
-          // Found Tag 7, record its information
-
-          targetPoseAmbiguity2 = tag.poseAmbiguity
-          targetYaw2 = tag.yaw
-          targetVisible2 = true
-
-          range2 =
-            PhotonUtils.calculateDistanceToTargetMeters(
-              GlobalsValues.PhotonVisionConstants.CAMERA_TWO_HEIGHT,
-              1.435, // From 2024 game manual for ID 7 | IMPORTANT TO CHANGE
-              GlobalsValues.PhotonVisionConstants
-                .CAMERA_TWO_ANGLE, // Rotation about Y = Pitch | UP IS POSITIVE
-              Units.degreesToRadians(tag.pitch),
-            )
-        }
-      }
-    } else {
-      targetVisible2 = false
-      targetPoseAmbiguity2 = 1e9
-    }
+    processCameraResult(result1, 1)
+    processCameraResult(result2, 2)
 
     if (targetPoseAmbiguity1 > targetPoseAmbiguity2) {
       targetYaw = targetYaw1
@@ -133,6 +91,57 @@ class Photonvision : SubsystemBase() {
       targetYaw = targetYaw2
       rangeToTarget = range2
     }
+  }
+
+  /**
+   * Processes the result from a camera and updates the target information.
+   *
+   * @param result The result from the camera's pipeline.
+   * @param cameraIndex The index of the camera (1 or 2).
+   */
+  private fun processCameraResult(result: PhotonPipelineResult, cameraIndex: Int) {
+    if (result.hasTargets()) {
+      for (tag in result.getTargets()) {
+        if (tag.fiducialId == 7) {
+          if (cameraIndex == 1) {
+            targetPoseAmbiguity1 = tag.poseAmbiguity
+            targetYaw1 = tag.yaw
+            targetVisible1 = true
+            range1 = calculateRange(tag, GlobalsValues.PhotonVisionConstants.CAMERA_ONE_HEIGHT, GlobalsValues.PhotonVisionConstants.CAMERA_ONE_ANGLE)
+          } else {
+            targetPoseAmbiguity2 = tag.poseAmbiguity
+            targetYaw2 = tag.yaw
+            targetVisible2 = true
+            range2 = calculateRange(tag, GlobalsValues.PhotonVisionConstants.CAMERA_TWO_HEIGHT, GlobalsValues.PhotonVisionConstants.CAMERA_TWO_ANGLE)
+          }
+        }
+      }
+    } else {
+      if (cameraIndex == 1) {
+        targetVisible1 = false
+        targetPoseAmbiguity1 = 1e9
+      } else {
+        targetVisible2 = false
+        targetPoseAmbiguity2 = 1e9
+      }
+    }
+  }
+
+  /**
+   * Calculates the range to a target based on the camera height, target height, and camera angle.
+   *
+   * @param tag The tracked target.
+   * @param cameraHeight The height of the camera.
+   * @param cameraAngle The angle of the camera.
+   * @return The calculated range to the target.
+   */
+  private fun calculateRange(tag: PhotonTrackedTarget, cameraHeight: Double, cameraAngle: Double): Double {
+    return PhotonUtils.calculateDistanceToTargetMeters(
+      cameraHeight,
+      1.435, // From 2024 game manual for ID 7 | IMPORTANT TO CHANGE
+      cameraAngle, // Rotation about Y = Pitch | UP IS POSITIVE
+      Units.degreesToRadians(tag.pitch),
+    )
   }
 
   /**

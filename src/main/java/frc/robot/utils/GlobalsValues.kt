@@ -9,8 +9,13 @@ import com.pathplanner.lib.util.ReplanningConfig
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 
+/**
+ * Singleton object containing global values for the robot.
+ */
 object GlobalsValues {
-
+  /**
+   * Object containing global values related to motors.
+   */
   object MotorGlobalValues {
     // Motor CAN ID Values
     const val FRONT_LEFT_STEER_ID = 1
@@ -47,7 +52,13 @@ object GlobalsValues {
     var AACORN_MODE: Boolean = true
   }
 
+  /**
+   * Object containing global values related to the swerve drive system.
+   */
   object SwerveGlobalValues {
+    /**
+     * Object containing PID configurations for the swerve drive system.
+     */
     object BasePIDGlobal {
       val STEER_PID = PID(13.0, 0.00085, 0.008, 0.0)
       val DRIVE_PID = PID(0.7, 0.0, 0.0)
@@ -111,6 +122,9 @@ object GlobalsValues {
     const val ON_BALANCE_ANGLE_THRESHOLD = 5.0
   }
 
+  /**
+   * Object containing global values related to the intake system.
+   */
   object IntakeGlobalValues {
     // Intake Motor Values
     const val IS_INVERTED: Boolean = false
@@ -129,6 +143,9 @@ object GlobalsValues {
     const val REVERSE_INTAKE_SPEED = 20.0
   }
 
+  /**
+   * Object containing global values related to the Limelight vision system.
+   */
   object LimelightGlobalValues {
     // Offset Values
     var tx = 0.0
@@ -145,6 +162,9 @@ object GlobalsValues {
     var distance = 0.0
   }
 
+  /**
+   * Object containing global values related to the PhotonVision system.
+   */
   object PhotonVisionConstants {
     // Offset Values
     var tx = 0.0
@@ -152,10 +172,10 @@ object GlobalsValues {
     var ta = 0.0
     var tv = 0.0
     // Camera One
-    const val CAMERA_ONE_HEIGHT = 0.0
-    const val CAMERA_ONE_ANGLE = 0.0 // up is positive
+    const val CAMERA_ONE_HEIGHT = 0.61
+    const val CAMERA_ONE_ANGLE = 7.5 // up is positive
     // Camera Two
-    const val CAMERA_TWO_HEIGHT = 0.0
-    const val CAMERA_TWO_ANGLE = 0.0 // up is positive
+    const val CAMERA_TWO_HEIGHT = 0.61
+    const val CAMERA_TWO_ANGLE = 7.5 // up is positive
   }
 }

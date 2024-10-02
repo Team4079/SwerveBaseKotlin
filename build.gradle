@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 java {
@@ -68,7 +69,8 @@ dependencies {
     simulationRelease wpi.sim.enableRelease()
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
 }
 
 test {
@@ -98,4 +100,10 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+repositories {
+    mavenCentral()
+}
+kotlin {
+    jvmToolchain(17)
 }

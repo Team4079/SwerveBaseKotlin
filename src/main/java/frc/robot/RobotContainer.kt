@@ -7,7 +7,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
 import frc.robot.commands.PadDrive
-import frc.robot.subsystems.Photonvision
+import frc.robot.subsystems.PhotonVision
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.utils.GlobalsValues.SwerveGlobalValues
 import frc.robot.utils.LogitechGamingPad
@@ -20,7 +20,7 @@ import frc.robot.utils.LogitechGamingPad
  */
 class RobotContainer {
   private val swerveSubsystem: SwerveSubsystem
-  private val photonvision: Photonvision
+  private val photonvision: PhotonVision
 
   private val padA: JoystickButton
   private val padB: JoystickButton
@@ -35,7 +35,7 @@ class RobotContainer {
       padX = JoystickButton(this, 3)
       padY = JoystickButton(this, 4)
 
-      photonvision = Photonvision()
+      photonvision = PhotonVision()
       swerveSubsystem = SwerveSubsystem(photonvision)
       swerveSubsystem.defaultCommand = PadDrive(swerveSubsystem, this, SwerveGlobalValues.IS_FIELD_ORIENTATED)
     }

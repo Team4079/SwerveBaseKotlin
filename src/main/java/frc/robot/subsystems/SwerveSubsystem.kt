@@ -24,7 +24,7 @@ import java.util.function.Consumer
 import java.util.function.Supplier
 
 /** The [SwerveSubsystem] class includes all the motors to drive the robot. */
-class SwerveSubsystem(photonvision: Photonvision?) : SubsystemBase() {
+class SwerveSubsystem(photonvision: PhotonVision?) : SubsystemBase() {
   /** Pose estimator for the swerve drive. */
   private val poseEstimator: SwerveDrivePoseEstimator? = null // TODO: Set the pose estimator
 
@@ -41,7 +41,7 @@ class SwerveSubsystem(photonvision: Photonvision?) : SubsystemBase() {
   private val modules: Array<SwerveModule>
 
   /** Photonvision instance for vision processing. */
-  private val photonvision: Photonvision?
+  private val photonvision: PhotonVision?
 
   /** Rotation value for the robot. */
   private var rot = 0.0

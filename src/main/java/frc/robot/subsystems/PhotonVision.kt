@@ -21,7 +21,7 @@ import org.photonvision.targeting.PhotonTrackedTarget
 /**
  * The PhotonVision subsystem handles vision processing using PhotonVision cameras.
  */
-class Photonvision : SubsystemBase() {
+class PhotonVision : SubsystemBase() {
   // PhotonVision cameras
   var camera1: PhotonCamera = PhotonCamera("Camera One")
   var camera2: PhotonCamera = PhotonCamera("Camera Two")
